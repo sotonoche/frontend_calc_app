@@ -1,0 +1,16 @@
+<form [formGroup]="productForm">
+    <input formControlName="name">
+    <input formControlName="price">
+    <input formControlName="description">
+    <img [src]="this.productForm.value.image">
+    <input type="file" (change)="on_file_change($event)">
+    <div formArrayName="characteristics">
+        <div *ngFor="let property of characteristics.controls; index as i">
+            <div [formGroupName]="i">
+                <input [value]="property.value.name" formControlName="name">
+                <input [value]="property.value.value" formControlName="value">
+            </div> 
+        </div>
+    </div>
+    <button (click)="confirm()">Z</button>
+  </form>

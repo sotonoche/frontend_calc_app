@@ -1,1 +1,22 @@
-<p>catalog works!</p>
+<div class="w-full">
+    <div class="w-full">
+        <div *ngFor="let product of products" class="flex w-full h-[150px] border-4">
+            <div class="h-full w-[150px] m-2"><img class="h-full w-full" src="https://i.pinimg.com/564x/11/12/5e/11125e80841b05cb0c17c28d90560ece.jpg" alt="penis"></div>
+            <div class="flex flex-col w-[70%]">
+                <h2 class="w-full">{{ product.name }}</h2>
+                <p class="w-full break-words" name="" id="">{{ product.description }}</p>
+            </div>
+            <div class="overflow-y-scroll w-[30%]">
+                <div>
+                    <h2>{{ product.price }}</h2>
+                    <h4>ZVO</h4>
+                </div>
+                <div>
+                    <h2>1488</h2>
+                    <h4>Petrovich</h4>
+                </div>
+            </div>
+            <button class="mt-[50px]" mat-icon-button (click)="on_product_open(product)"><mat-icon>search</mat-icon></button>
+        </div>
+    </div>
+</div>
