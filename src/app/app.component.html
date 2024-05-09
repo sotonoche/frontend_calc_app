@@ -1,1 +1,12 @@
-<p class="text-xl">ZOV</p>
+<div>
+  <mat-toolbar [ngStyle]="{'background-color' : 'green'}">
+    <button [routerLink]="['calculators']" mat-raised-button class="mr-1">Калькуляторы</button>
+    <button [routerLink]="['catalog']" mat-raised-button class="mr-1">Каталог товаров</button>
+    <button [routerLink]="['estimates']" mat-raised-button>Сметы</button>
+    <span class="flex-auto"></span>
+    <button [routerLink]="['login']" mat-icon-button><mat-icon [ngStyle]="{'color' : 'white'}">account_circle</mat-icon></button>
+  </mat-toolbar>
+  <div>
+    <router-outlet />
+  </div>
+</div>
