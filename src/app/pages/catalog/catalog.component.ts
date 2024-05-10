@@ -12,6 +12,7 @@ import { TransferService } from '../../services/transfer/transfer.service';
   imports: [MatButtonModule,
             MatIconModule,
             NgFor,
+            
   ],
   templateUrl: './catalog.component.html',
   styleUrl: './catalog.component.css'

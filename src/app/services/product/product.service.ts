@@ -14,4 +14,10 @@ export class ProductService {
   getAll() : Observable<any>{
     return this.http.get<any>(API_URL + 'products/');
   }
+  getFirstByCategoryId(id: number) : Observable<any>{
+    return this.http.get<any>(API_URL + 'get_product_selected_category/' + id);
+  }
+  create(product:any) : Observable<any>{
+    return this.http.post<any>(API_URL + 'products/', product)
+  }
 }
