@@ -38,5 +38,12 @@
             </option>                
         </select>
     </div>
-    <button (click)="confirm()">Send</button>
+    @if (isAdmin){
+        <button [disabled]="!productForm.valid" (click)="confirm()">Send</button>
+        @if (this.product) {
+            <button (click)="delete_product()">Delete</button>
+        }
+    }
+    
+
   </form>

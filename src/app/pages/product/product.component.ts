@@ -4,6 +4,7 @@ import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Va
 import { NgFor } from '@angular/common';
 import { CategoriesService } from '../../services/categories/categories.service';
 import { ProductService } from '../../services/product/product.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product',
@@ -21,16 +22,16 @@ export class ProductComponent {
   categories : any[] = [];
   isFirstProductOfCategory = false
 
-  constructor(private transferService: TransferService, private categoryService: CategoriesService, private productService: ProductService) {
+  constructor(private transferService: TransferService, private categoryService: CategoriesService, private productService: ProductService, private router: Router) {
     this.productForm = new FormGroup({
-      id : new FormControl(),
-      name : new FormControl(),
-      price : new FormControl(),
-      description : new FormControl(),
+      id : new FormControl(null),
+      name : new FormControl("", [Validators.required]),
+      price : new FormControl(0, [Validators.required]),
+      description : new FormControl("", [Validators.required]),
       image: new FormControl(),
-      image_file : new FormControl(),
+      image_file : new FormControl(null, [Validators.required]),
       characteristics : new FormArray([]),
-      category : new FormControl()
+      category : new FormControl(null, [Validators.required])
     });
   }
   ngOnInit(){
@@ -47,6 +48,8 @@ export class ProductComponent {
           this.productForm.patchValue({
             category : this.categories.find((c) => c.id === this.product.product_category)
           })
+          this.productForm.get("image_file")?.clearValidators()
+          this.productForm.get("image_file")?.updateValueAndValidity()
         }
         else {
           this.productForm.patchValue({
@@ -71,8 +74,8 @@ export class ProductComponent {
     });
     for (let i=0; i < product.characteristics.length; i++){
       this.characteristics.push(new FormGroup({
-        name: new FormControl(product.characteristics[i].name),
-        value: new FormControl(product.characteristics[i].value)
+        name: new FormControl(product.characteristics[i].name, [Validators.required]),
+        value: new FormControl(product.characteristics[i].value, [Validators.required])
       }
       ));
     };
@@ -101,7 +104,25 @@ export class ProductComponent {
   }
 
   confirm(){
+    let product = this.create_product_from_form()
+    if (!this.product) {
+      this.productService.create(product).subscribe({
+        complete: () => this.redirect_to_catalog()
+        
+      })
+    }
+    else{
+      this.productService.update(product).subscribe({
+        complete: () => this.redirect_to_catalog()
+        
+      })
+    }
+    
+  }
+
+  create_product_from_form(): any{
     let product = {
+      id : this.productForm.value.id,
       name: this.productForm.value.name,
       image: this.productForm.value.image,
       description: this.productForm.value.description,
@@ -109,9 +130,12 @@ export class ProductComponent {
       product_category: this.productForm.value.category.id,
       price: this.productForm.value.price
     }
-    this.productService.create(product).subscribe({
-      complete: () => console.log("ЖОПА")
-      
+    return product
+  }
+
+  delete_product(){
+    this.productService.delete(this.productForm.value.id).subscribe({
+      complete: () => this.redirect_to_catalog()  
     })
   }
 
@@ -125,8 +149,8 @@ export class ProductComponent {
           this.characteristics.clear()
           for (let i=0; i < product.characteristics.length; i++){
             this.characteristics.push(new FormGroup({
-              name: new FormControl(product.characteristics[i].name),
-              value: new FormControl()
+              name: new FormControl(product.characteristics[i].name, [Validators.required]),
+              value: new FormControl(null, [Validators.required])
             }
             ));
           };
@@ -141,8 +165,8 @@ export class ProductComponent {
 
   on_fields_create(){
     this.characteristics.push(new FormGroup({
-      name: new FormControl(),
-      value: new FormControl()
+      name: new FormControl(null, [Validators.required]),
+      value: new FormControl(null, [Validators.required])
     }))
   }
 
@@ -150,5 +174,9 @@ export class ProductComponent {
     this.characteristics.removeAt(
       this.characteristics.controls.length-1
     )
+  }
+
+  redirect_to_catalog(){
+    this.router.navigate(["catalog"])
   }
 }
