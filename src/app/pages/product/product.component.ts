@@ -44,7 +44,6 @@ export class ProductComponent {
       next: (data:any) => this.categories = data,
       complete: () => {
         if (this.product != null) {
-          //console.log(this.categories.find((c) => c.id === this.product.product_category))
           this.productForm.patchValue({
             category : this.categories.find((c) => c.id === this.product.product_category)
           })
