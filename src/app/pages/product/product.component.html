@@ -1,47 +1,96 @@
 <form [formGroup]="productForm">
     <div class="w-[45%] ml-5 mt-10">
         @if (this.isAdmin) {
-            <h1><input class="w-full text-[35px]" formControlName="name"></h1>
+            <h1 class="text-2xl"><input class="w-full text-2xl" formControlName="name"></h1>
         }
         @else{
-            <p class="text-[35px]">{{ this.product.name }}</p>
+            <p class="text-2xl">{{ this.product.name }}</p>
         }
     </div>
-    <div class="w-[25%] ml-5">
-        <img [src]="productForm.value.image" alt="not found">
-    </div>
-    <input formControlName="price">
-    <input formControlName="description">
-    <input type="file" (change)="on_file_change($event)">
-    <div formArrayName="characteristics">
-        @if (isFirstProductOfCategory) {
-            <p>ДОБАВЛЕНИЕ НОВЫХ ПОЛЕЙ</p>
-            <button (click)="on_fields_create()">ДОБАВИТЬ НОВОЕ ПОЛЕ</button>
-            <button (click)="remove_last_field()">УДАЛЕНИЕ ПОЛЯ</button>
-        }
-        <div *ngFor="let property of characteristics.controls; index as i">
-            <div [formGroupName]="i">
-                <input [value]="property.value.name" formControlName="name">
-                <input [value]="property.value.value" formControlName="value">
-            </div> 
+    <div class="grid grid-rows-3 grid-flow-col gap-4">
+        <div class="row-span-3 w-[25%] ml-5 border-4 border-stone-500 rounded-lg">
+            <img class="w-[100%]" [src]="productForm.value.image" alt="not found">
         </div>
+        <div class="col-span-2 ">
+            <p class="text-2xl">Стоимость:</p>
+            <div class="w-[40%] border-4 border-stone-500 rounded-lg">
+                @if (isAdmin) {
+                    <input formControlName="price">
+                }
+                @else {
+                    <p style="margin-bottom: 0px;">{{this.product.price}} Руб.</p>
+                }
+            </div>
+        </div>
+        <div class="row-span-2 col-span-2 ">
+            <p class="text-2xl">Характеристики:</p>
+            <div class="w-[40%] border-4 border-stone-500 rounded-lg" formArrayName="characteristics">
+                @if (isAdmin) {
+                    @if (isFirstProductOfCategory) {
+                        <p>ДОБАВЛЕНИЕ НОВЫХ ПОЛЕЙ</p>
+                        <button (click)="on_fields_create()" mat-raised-button>ДОБАВИТЬ НОВОЕ ПОЛЕ</button>
+                        <button (click)="remove_last_field()" mat-raised-button>УДАЛЕНИЕ ПОЛЯ</button>
+                    }
+                    <div *ngFor="let property of characteristics.controls; index as i">
+                        <div [formGroupName]="i">
+                            <input [value]="property.value.name" formControlName="name">
+                            <input [value]="property.value.value" formControlName="value">
+                        </div> 
+                    </div>
+                }
+                @else {
+                    <div *ngFor="let property of characteristics.controls; index as i">
+                        <div [formGroupName]="i">
+                            <p class="inline-block">{{ property.value.name }}</p>
+                            <p class="inline-block">{{ property.value.value }}</p>
+                        </div> 
+                    </div>
+                }
+            </div>
+        </div>
+      </div>
+    <div class="ml-5 mt-3">
+        @if (this.isAdmin) {
+            <input type="file" (change)="on_file_change($event)">
+        }
     </div>
-    <div>
-        <select (change)="on_category_change()" formControlName="category">
+    @if (this.isAdmin) {
+        <textarea class="ml-5 mt-3 w-[25%] h-[150px] border-4 border-stone-500 rounded-lg" formControlName="description"></textarea>
+    }
+    @else{
+        <div class="ml-5 mt-3 w-[25%] h-[150px] border-4 border-stone-500 rounded-lg">
+            <p class="w-full overflow-hidden break-words">{{ this.product.description }}</p>
+        </div>
+    }
+    
+    <div class="ml-5 mt-3 mb-3 text-xl">
+        @if (this.isAdmin) {
+            <select (change)="on_category_change()" formControlName="category">
             
             
-            <option *ngFor="let category of categories" 
-            [ngValue]="category">
-            {{
-               category.name
-            }}
-            </option>                
-        </select>
+                <option *ngFor="let category of categories" 
+                [ngValue]="category">
+                {{
+                   category.name
+                }}
+                </option>                
+            </select>
+        }
+        @else{
+            <select (change)="on_category_change()" formControlName="category">
+                <option disabled *ngFor="let category of categories" 
+                [ngValue]="category">
+                {{
+                   category.name
+                }}
+                </option>                
+            </select>
+        }
     </div>
     @if (isAdmin){
-        <button [disabled]="!productForm.valid" (click)="confirm()">Send</button>
+        <button mat-stroked-button color="primary" class="mr-2 ml-5" [disabled]="!productForm.valid" (click)="confirm()">Send</button>
         @if (this.product) {
-            <button (click)="delete_product()">Delete</button>
+            <button mat-stroked-button color="warn" (click)="delete_product()">Delete</button>
         }
     }
     

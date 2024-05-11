@@ -5,20 +5,22 @@ import { NgFor } from '@angular/common';
 import { CategoriesService } from '../../services/categories/categories.service';
 import { ProductService } from '../../services/product/product.service';
 import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-product',
   standalone: true,
   imports: [ReactiveFormsModule,
             FormsModule,
-            NgFor],
+            NgFor,
+            MatButtonModule],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css'
 })
 export class ProductComponent {
   productForm : FormGroup;
   product : any = null;
-  isAdmin = true
+  isAdmin = false
   categories : any[] = [];
   isFirstProductOfCategory = false
 
