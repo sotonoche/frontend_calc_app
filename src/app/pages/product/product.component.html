@@ -77,14 +77,7 @@
             </select>
         }
         @else{
-            <select (change)="on_category_change()" formControlName="category">
-                <option disabled *ngFor="let category of categories" 
-                [ngValue]="category">
-                {{
-                   category.name
-                }}
-                </option>                
-            </select>
+            <input [readOnly]="true" formControlName="category">
         }
     </div>
     @if (isAdmin){

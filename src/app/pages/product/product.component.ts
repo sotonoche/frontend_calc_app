@@ -20,7 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class ProductComponent {
   productForm : FormGroup;
   product : any = null;
-  isAdmin = false
+  isAdmin = true
   categories : any[] = [];
   isFirstProductOfCategory = false
 
@@ -47,8 +47,13 @@ export class ProductComponent {
       complete: () => {
         if (this.product != null) {
           this.productForm.patchValue({
-            category : this.categories.find((c) => c.id === this.product.product_category)
-          })
+            category : this.categories.find((c) => c.id === this.product.product_category)} )
+            if (!this.isAdmin) {
+            
+this.productForm.patchValue({
+            category : this.categories.find((c) => c.id === this.product.product_category).name
+})
+          }
           this.productForm.get("image_file")?.clearValidators()
           this.productForm.get("image_file")?.updateValueAndValidity()
         }
@@ -63,6 +68,7 @@ export class ProductComponent {
     
     console.log(this.productForm.value);
   }
+
 
   load_data(product: any){
     this.productForm.patchValue({
